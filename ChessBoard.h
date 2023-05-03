@@ -14,8 +14,8 @@ public:
 private:
 	std::vector<Chess*> chesses;
 
-	// 棋盘长和宽度最多可以容纳13个棋子
-	static const int CHESS_NUM = 13;
+	// 棋盘长和宽度有12个格子
+	static const int CHESS_NUM = 12;
 
 	// 每个棋子的大小是30px * 30px
 	static const int CHESS_SIZE = 30;

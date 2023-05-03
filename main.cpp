@@ -11,6 +11,7 @@ int main()
         game->update();
         game->render();
     }
-    
+
+    delete game;
     return 0;
 }
