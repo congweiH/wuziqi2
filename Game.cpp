@@ -2,7 +2,7 @@
 #include <easyx.h>
 
 Game::Game() {
-	initgraph(800, 600);
+	initgraph(600, 600);
 	// 设置当前设备图案填充和文字输出时的背景模式为透明
 	setbkmode(TRANSPARENT);
 
@@ -18,6 +18,7 @@ void Game::handleInput() {
 	while (true) {
 		// 获取鼠标信息
 		ExMessage mouse = getmessage(EX_MOUSE);
+		chessBoard->setHoverPoint({ mouse.x, mouse.y });
 		// 如果能放
 		//if (chessBoard->canPut()) {
 		//	// 则放

@@ -9,10 +9,15 @@ public:
 
 	bool canPut(ExMessage mouse);
 	void putChess(Point p, COLORREF color);
+	Point transXY(Point p);
 	void render();
 
+	// getter and setter
+	void setHoverPoint(Point p);
+
 private:
-	std::vector<Chess*> chesses;
+	std::vector<Chess*> chessList;
+	Point hoverPoint;
 
 	// 棋盘长和宽度有12个格子
 	static const int CHESS_NUM = 12;
@@ -22,6 +27,8 @@ private:
 
 	// 棋盘左上角的坐标
 	const Point TOP_LEFT = { 50, 50 };
+	Point topLeft = { TOP_LEFT.x + CHESS_SIZE,  TOP_LEFT.y + CHESS_SIZE };	// 内部棋盘的左上角
+	const int INNER_SIZE = CHESS_SIZE * CHESS_NUM;		// 内部棋盘的边长大小
 
 	// 背景色
 	COLORREF BG_COLOR = RGB(255, 205, 150);

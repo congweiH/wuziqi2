@@ -10,7 +10,7 @@ bool ChessBoard::canPut(ExMessage mouse) {
 
 void ChessBoard::putChess(Point p, COLORREF color) {
 	Chess* chess = new Chess(p, color);
-	chesses.push_back(chess);
+	chessList.push_back(chess);
 }
 
 void ChessBoard::render() {
@@ -19,33 +19,64 @@ void ChessBoard::render() {
 	setfillcolor(BG_COLOR);
 	solidrectangle(TOP_LEFT.x, TOP_LEFT.y, TOP_LEFT.x + a, TOP_LEFT.y + a);
 
-	// 绘制 x 坐标和 y 坐标
+	// 绘制 x 坐标和 y 坐标, 下面的2和8是调整不断尝试得来的数字
 	settextcolor(BLACK);
 	for (int i = 0; i < xStr.size(); i++) {
-		outtextxy(TOP_LEFT.x + i * CHESS_SIZE, TOP_LEFT.y, xStr[i]);
-		outtextxy(TOP_LEFT.x, TOP_LEFT.y + i * CHESS_SIZE, yStr[i]);
+		outtextxy(TOP_LEFT.x + i * CHESS_SIZE - 8, TOP_LEFT.y + 2, xStr[i]);
+		outtextxy(TOP_LEFT.x + 2, TOP_LEFT.y + i * CHESS_SIZE - 8, yStr[i]);
 	}
 
-	// 绘制棋盘线条
-	Point topLeft = { TOP_LEFT.x + CHESS_SIZE,  TOP_LEFT.y + CHESS_SIZE };	// 内部棋盘的左上角
-	int b = CHESS_SIZE * CHESS_NUM;		// 内部棋盘的边长大小
+	// -----------------------     绘制棋盘线条    -------------------------
 	setlinecolor(BLACK);
 	for (int i = 0; i < 13; i++) {
 		if (i == 0 || i == 12) {
-			// 粗线
-			setlinestyle(PS_SOLID, 3);
-		} else {
-			// 细线
-			setlinestyle(PS_SOLID, 1);
+			setlinestyle(PS_SOLID, 3); // 粗线
+		} else { 
+			setlinestyle(PS_SOLID, 1); // 细线
 		}
-		line(topLeft.x, topLeft.y + i * CHESS_SIZE, topLeft.x + b, topLeft.y + i * CHESS_SIZE);
-		line(topLeft.x + i * CHESS_SIZE, topLeft.y, topLeft.x + i * CHESS_SIZE, topLeft.y + b);
+		line(topLeft.x, topLeft.y + i * CHESS_SIZE, topLeft.x + INNER_SIZE, topLeft.y + i * CHESS_SIZE);
+		line(topLeft.x + i * CHESS_SIZE, topLeft.y, topLeft.x + i * CHESS_SIZE, topLeft.y + INNER_SIZE);
 	}
 
 	// 绘制点
 
-	// 绘制棋子
-	for (int i = 0; i < chesses.size(); i++) {
-		chesses[i]->render();
+	// -----------------------     绘制棋子    -------------------------
+ 	for (int i = 0; i < chessList.size(); i++) {
+		chessList[i]->render();
 	}
+
+	// -----------------------    绘制虚线框框  ------------------------- 
+	setlinecolor(LIGHTGRAY);
+	setlinestyle(PS_SOLID, 2);
+	// 设置逻辑坐标原点，方便绘制
+	setorigin(hoverPoint.x, hoverPoint.y);
+	// 左上角
+	line(-14, -14, -7, -14);
+	line(-14, -14, -14, -7);
+	// 右上角
+	line(14, -14, 7, -14);
+	line(14, -14, 14, -7);
+	// 左下角
+	line(-14, 14, -7, 14);
+	line(-14, 14, -14, 7);
+	// 右下角
+	line(14, 14, 7, 14);
+	line(14, 14, 14, 7);
+	// 恢复逻辑坐标原点
+	setorigin(0, 0);
+}
+
+Point ChessBoard::transXY(Point p) {
+	p.x = max(p.x, topLeft.x);
+	p.x = min(p.x, topLeft.x + INNER_SIZE);
+	p.y = max(p.y, topLeft.y);
+	p.y = min(p.y, topLeft.y + INNER_SIZE);
+	int x = ((p.x - topLeft.x + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.x;
+	int y = ((p.y - topLeft.y + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.y;
+	return { x, y };
+}
+
+// getter and setter
+void ChessBoard::setHoverPoint(Point p) {
+	hoverPoint = transXY(p);
 }
