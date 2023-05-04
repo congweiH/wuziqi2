@@ -9,15 +9,20 @@ public:
 
 	bool canPut(ExMessage mouse);
 	void putChess(Point p, COLORREF color);
-	Point transXY(Point p);
 	void render();
 
 	// getter and setter
 	void setHoverPoint(Point p);
+	void setClickPoint(Point p);
+
+private:
+	Point transXY(Point p);
+	void drawFrame(Point p);
 
 private:
 	std::vector<Chess*> chessList;
 	Point hoverPoint;
+	Point clickPoint = { -1, -1 };
 
 	// 棋盘长和宽度有12个格子
 	static const int CHESS_NUM = 12;

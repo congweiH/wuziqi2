@@ -45,11 +45,29 @@ void ChessBoard::render() {
 		chessList[i]->render();
 	}
 
-	// -----------------------    绘制虚线框框  ------------------------- 
+	// ------------------   绘制鼠标悬浮和点击的虚线框  --------------------
+	drawFrame(hoverPoint);
+	if (clickPoint.x != -1) {
+		drawFrame(clickPoint);
+	}
+}
+
+// 辅助函数
+Point ChessBoard::transXY(Point p) {
+	p.x = max(p.x, topLeft.x);
+	p.x = min(p.x, topLeft.x + INNER_SIZE);
+	p.y = max(p.y, topLeft.y);
+	p.y = min(p.y, topLeft.y + INNER_SIZE);
+	int x = ((p.x - topLeft.x + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.x;
+	int y = ((p.y - topLeft.y + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.y;
+	return { x, y };
+}
+
+void ChessBoard::drawFrame(Point p) {
 	setlinecolor(LIGHTGRAY);
 	setlinestyle(PS_SOLID, 2);
 	// 设置逻辑坐标原点，方便绘制
-	setorigin(hoverPoint.x, hoverPoint.y);
+	setorigin(p.x, p.y);
 	// 左上角
 	line(-14, -14, -7, -14);
 	line(-14, -14, -14, -7);
@@ -66,17 +84,11 @@ void ChessBoard::render() {
 	setorigin(0, 0);
 }
 
-Point ChessBoard::transXY(Point p) {
-	p.x = max(p.x, topLeft.x);
-	p.x = min(p.x, topLeft.x + INNER_SIZE);
-	p.y = max(p.y, topLeft.y);
-	p.y = min(p.y, topLeft.y + INNER_SIZE);
-	int x = ((p.x - topLeft.x + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.x;
-	int y = ((p.y - topLeft.y + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.y;
-	return { x, y };
-}
-
 // getter and setter
 void ChessBoard::setHoverPoint(Point p) {
 	hoverPoint = transXY(p);
+}
+
+void ChessBoard::setClickPoint(Point p) {
+	clickPoint = transXY(p);
 }

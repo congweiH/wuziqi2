@@ -19,6 +19,9 @@ void Game::handleInput() {
 		// 获取鼠标信息
 		ExMessage mouse = getmessage(EX_MOUSE);
 		chessBoard->setHoverPoint({ mouse.x, mouse.y });
+		if (mouse.lbutton) {
+			chessBoard->setClickPoint({ mouse.x, mouse.y });
+		}
 		// 如果能放
 		//if (chessBoard->canPut()) {
 		//	// 则放
