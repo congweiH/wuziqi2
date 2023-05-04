@@ -15,21 +15,18 @@ Game::~Game() {
 }
 
 void Game::handleInput() {
-	while (true) {
-		// 获取鼠标信息
-		ExMessage mouse = getmessage(EX_MOUSE);
-		chessBoard->setHoverPoint({ mouse.x, mouse.y });
-		if (mouse.lbutton) {
-			chessBoard->setClickPoint({ mouse.x, mouse.y });
-		}
-		// 如果能放
-		//if (chessBoard->canPut()) {
-		//	// 则放
-		//	chessBoard->putChess({ 0, 0 }, BLACK);
-		//	
-		//}
-		return;
+	// 获取鼠标信息
+	ExMessage mouse = getmessage(EX_MOUSE);
+	chessBoard->setHoverPoint({ mouse.x, mouse.y });
+	if (mouse.lbutton) {
+		chessBoard->setClickPoint({ mouse.x, mouse.y });
 	}
+	// 如果能放
+	//if (chessBoard->canPut()) {
+	//	// 则放
+	//	chessBoard->putChess({ 0, 0 }, BLACK);
+	//	
+	//}
 }
 
 void Game::update() {
