@@ -4,22 +4,33 @@ ChessBoard::ChessBoard() {
 	
 }
 
-bool ChessBoard::canPut(ExMessage mouse) {
-	return true;
+ChessBoard::~ChessBoard() {
+	for (int i = 0; i < chessList.size(); i++) {
+		delete chessList[i];
+	}
+}
+
+bool ChessBoard::canPut(Point p) {
+	return !getHaveChess(transXY(p));
 }
 
 void ChessBoard::putChess(Point p, COLORREF color) {
-	Chess* chess = new Chess(p, color);
+	Point loc = transXY(p);
+	setClickPoint(loc);
+	setHaveChess(loc, true);
+
+	Chess* chess = new Chess(loc, color);
 	chessList.push_back(chess);
 }
 
 void ChessBoard::render() {
-	// 填充棋盘背景色
+	// ----------------  填充棋盘背景色  ------------------------
 	int a = CHESS_SIZE * (CHESS_NUM + 2);	// 总的棋盘的边长大小
 	setfillcolor(BG_COLOR);
 	solidrectangle(TOP_LEFT.x, TOP_LEFT.y, TOP_LEFT.x + a, TOP_LEFT.y + a);
 
-	// 绘制 x 坐标和 y 坐标, 下面的2和8是调整不断尝试得来的数字
+	// -----------------  绘制 x 坐标和 y 坐标 -----------------------
+	// 下面的2和8是调整不断尝试得来的数字
 	settextcolor(BLACK);
 	for (int i = 0; i < xStr.size(); i++) {
 		outtextxy(TOP_LEFT.x + i * CHESS_SIZE - 8, TOP_LEFT.y + 2, xStr[i]);
@@ -52,12 +63,16 @@ void ChessBoard::render() {
 	}
 }
 
+bool ChessBoard::inChessBoard(Point p) {
+	if (p.x < topLeft.x - 10 || p.x > topLeft.x + INNER_SIZE + 10 ||
+		p.y < topLeft.y - 10 || p.y > topLeft.y + INNER_SIZE + 10) {
+		return false;
+	}
+	return true;
+}
+
 // 辅助函数
 Point ChessBoard::transXY(Point p) {
-	p.x = max(p.x, topLeft.x);
-	p.x = min(p.x, topLeft.x + INNER_SIZE);
-	p.y = max(p.y, topLeft.y);
-	p.y = min(p.y, topLeft.y + INNER_SIZE);
 	int x = ((p.x - topLeft.x + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.x;
 	int y = ((p.y - topLeft.y + CHESS_SIZE / 2) / CHESS_SIZE) * CHESS_SIZE + topLeft.y;
 	return { x, y };
@@ -90,5 +105,17 @@ void ChessBoard::setHoverPoint(Point p) {
 }
 
 void ChessBoard::setClickPoint(Point p) {
-	clickPoint = transXY(p);
+	clickPoint = p;
+}
+
+void ChessBoard::setHaveChess(Point p, bool f) {
+	int x = (p.x - topLeft.x) / CHESS_SIZE;
+	int y = (p.y - topLeft.y) / CHESS_SIZE;
+	haveChess[x][y] = f;
+}
+
+bool ChessBoard::getHaveChess(Point p) {
+	int x = (p.x - topLeft.x) / CHESS_SIZE;
+	int y = (p.y - topLeft.y) / CHESS_SIZE;
+	return haveChess[x][y];
 }

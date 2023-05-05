@@ -6,23 +6,28 @@ class ChessBoard
 {
 public:
 	ChessBoard();
+	~ChessBoard();
 
-	bool canPut(ExMessage mouse);
+	bool inChessBoard(Point p);
+	bool canPut(Point p);
 	void putChess(Point p, COLORREF color);
 	void render();
 
 	// getter and setter
 	void setHoverPoint(Point p);
 	void setClickPoint(Point p);
+	void setHaveChess(Point p, bool f);
+	bool getHaveChess(Point p);
 
 private:
-	Point transXY(Point p);
+	Point transXY(Point p);		// 将鼠标点击的位置转换成点的坐标
 	void drawFrame(Point p);
 
 private:
 	std::vector<Chess*> chessList;
 	Point hoverPoint;
 	Point clickPoint = { -1, -1 };
+	bool haveChess[13][13];
 
 	// 棋盘长和宽度有12个格子
 	static const int CHESS_NUM = 12;

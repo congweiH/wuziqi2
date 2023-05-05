@@ -10,23 +10,21 @@ Game::Game() {
 }
 
 Game::~Game() {
+	delete chessBoard;
 	EndBatchDraw();
 	closegraph();
 }
 
 void Game::handleInput() {
 	// 获取鼠标信息
-	ExMessage mouse = getmessage(EX_MOUSE);
-	chessBoard->setHoverPoint({ mouse.x, mouse.y });
-	if (mouse.lbutton) {
-		chessBoard->setClickPoint({ mouse.x, mouse.y });
+	ExMessage m = getmessage(EX_MOUSE);
+	// 鼠标在棋盘内
+	if (chessBoard->inChessBoard({ m.x, m.y })) {
+		chessBoard->setHoverPoint({ m.x, m.y });
+		if (m.lbutton && chessBoard->canPut({ m.x, m.y })) {
+			chessBoard->putChess({ m.x, m.y }, BLACK);
+		}
 	}
-	// 如果能放
-	//if (chessBoard->canPut()) {
-	//	// 则放
-	//	chessBoard->putChess({ 0, 0 }, BLACK);
-	//	
-	//}
 }
 
 void Game::update() {
