@@ -11,7 +11,10 @@ public:
 	void update();
 	void render();
 
+	void toggleColor();
+
 private:
 	ChessBoard* chessBoard;
+	COLORREF color;
 };
 

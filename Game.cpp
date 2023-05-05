@@ -7,6 +7,7 @@ Game::Game() {
 	setbkmode(TRANSPARENT);
 
 	chessBoard = new ChessBoard();
+	color = WHITE;
 }
 
 Game::~Game() {
@@ -22,7 +23,8 @@ void Game::handleInput() {
 	if (chessBoard->inChessBoard({ m.x, m.y })) {
 		chessBoard->setHoverPoint({ m.x, m.y });
 		if (m.lbutton && chessBoard->canPut({ m.x, m.y })) {
-			chessBoard->putChess({ m.x, m.y }, BLACK);
+			chessBoard->putChess({ m.x, m.y }, color);
+			toggleColor();
 		}
 	}
 }
@@ -41,4 +43,13 @@ void Game::render() {
 	chessBoard->render();
 
 	FlushBatchDraw();
+}
+
+void Game::toggleColor() {
+	if (color == WHITE) {
+		color = BLACK;
+	}
+	else {
+		color = WHITE;
+	}
 }
